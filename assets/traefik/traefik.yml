@@ -1,0 +1,25 @@
+api:
+  dashboard: true
+  insecure: true
+
+log:
+  level: DEBUG
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+providers:
+  consulCatalog:
+    endpoint:
+      address: "127.0.0.1:8500"
+  consul:
+    endpoints:
+      - "127.0.0.1:8500"
+
+tls:
+  certificates:
+    - certFile: "assets/ssl/cert.crt"
+      keyFile: "assets/ssl/key.key"

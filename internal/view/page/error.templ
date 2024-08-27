@@ -1,0 +1,12 @@
+package page
+
+import (
+    "github.com/aguerram/gtcth/internal/view/layout"
+)
+
+templ Error(errorMessage string){
+    @layout.DefaultLayout("Error") {
+        <h1>Oops! Something went wrong.</h1>
+        <p>{errorMessage}</p>
+    }
+}
