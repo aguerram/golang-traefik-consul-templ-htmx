@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"errors"
-	"github.com/aguerram/gtcth/internal/view"
-	"github.com/aguerram/gtcth/internal/view/page"
+	"github.com/aguerram/gtcth/internal/web/views/page"
+	"github.com/aguerram/gtcth/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 	log "github.com/sirupsen/logrus"
 )
@@ -14,7 +14,7 @@ func NewAppErrorHandler() fiber.Handler {
 			if r := recover(); r != nil {
 				log.Errorf("Panic: %v", r)
 				c.Status(fiber.StatusInternalServerError)
-				view.Render(c, page.Error("Internal Server Error"))
+				utils.Render(c, page.Error("Internal Server Error"))
 			}
 		}()
 		err := c.Next()
@@ -30,7 +30,7 @@ func NewAppErrorHandler() fiber.Handler {
 				c.Status(fiber.StatusInternalServerError)
 			}
 			log.Errorf("Handler web error %s", errorMessage)
-			return view.Render(c, page.Error(errorMessage))
+			return utils.Render(c, page.Error(errorMessage))
 		}
 		return err
 	}

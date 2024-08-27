@@ -18,7 +18,7 @@ func StartHttpServer(env *config.AppEnv) (*fiber.App, func()) {
 	app := fiber.New()
 	app.Use(logger.New(logger.Config{
 		Next: func(c *fiber.Ctx) bool {
-			return c.Path() == "/health"
+			return c.Path() == "/api/v1/health"
 		},
 	}))
 	return app, func() {

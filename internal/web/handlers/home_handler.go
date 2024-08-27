@@ -2,8 +2,8 @@ package handler
 
 import (
 	"github.com/aguerram/gtcth/config"
-	"github.com/aguerram/gtcth/internal/view"
-	"github.com/aguerram/gtcth/internal/view/page"
+	"github.com/aguerram/gtcth/internal/web/views/page"
+	"github.com/aguerram/gtcth/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -18,12 +18,12 @@ func NewHomeHandler(env *config.AppEnv) *HomeHandler {
 }
 
 func (h *HomeHandler) GetHome(ctx *fiber.Ctx) error {
-	return view.Render(ctx, page.Home())
+	return utils.Render(ctx, page.Home())
 }
 func (h *HomeHandler) GetUserProfile(ctx *fiber.Ctx) error {
 	profileId := ctx.Params("profileId")
 	if profileId == "0" {
 		return fiber.NewError(fiber.StatusBadRequest, "profileId is required")
 	}
-	return view.Render(ctx, page.UserProfile(profileId))
+	return utils.Render(ctx, page.UserProfile(profileId))
 }

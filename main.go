@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"github.com/aguerram/gtcth/config"
 	"github.com/aguerram/gtcth/internal"
-	"github.com/aguerram/gtcth/internal/route"
+	"github.com/aguerram/gtcth/internal/api"
+	"github.com/aguerram/gtcth/internal/web"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -14,8 +15,12 @@ func main() {
 	env := config.InitializeAppEnv()
 
 	server, shutdownHttpServer := internal.StartHttpServer(env)
-	//register routes
-	route.InitializeRoutes(env, server)
+
+	//initialize api
+	api.InitializeApi(env, server.Group("/api/v1"))
+
+	//initialize web app
+	web.InitializeWebApp(env, server.Group("/"))
 
 	//register with consul
 	deregisterConsul := config.RegisterServiceWithConsul(env)

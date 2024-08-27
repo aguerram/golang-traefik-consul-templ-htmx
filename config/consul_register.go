@@ -1,10 +1,12 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"github.com/hashicorp/consul/api"
 	log "github.com/sirupsen/logrus"
 	"os"
+	"strings"
 )
 
 func RegisterServiceWithConsul(env *AppEnv) func() {
@@ -27,6 +29,10 @@ func RegisterServiceWithConsul(env *AppEnv) func() {
 		//fmt.Sprintf("traefik.http.routers.%s.tls.certresolver=default", env.DiscoveryAppName),
 		//fmt.Sprintf("traefik.http.services.%s.loadbalancer.server.port=%d", env.DiscoveryAppName, env.Port),
 	}
+	healtCheckPath, err := getHealthCheckPath()
+	if err != nil {
+		log.Panicf("Failed to get health check path: %v", err)
+	}
 	// > Register service with Consul
 	registration := &api.AgentServiceRegistration{
 		ID:      serviceID,
@@ -34,7 +40,7 @@ func RegisterServiceWithConsul(env *AppEnv) func() {
 		Port:    env.Port,
 		Address: ipAddress,
 		Check: &api.AgentServiceCheck{
-			HTTP:                           fmt.Sprintf("http://%s:%d/health", ipAddress, env.Port),
+			HTTP:                           fmt.Sprintf("http://%s:%d%s", ipAddress, env.Port, healtCheckPath),
 			Interval:                       "10s",
 			DeregisterCriticalServiceAfter: "11s",
 		},
@@ -64,19 +70,16 @@ func RegisterServiceWithConsul(env *AppEnv) func() {
 }
 
 func getLocalIP() (string, error) {
-	//addrs, err := net.InterfaceAddrs()
-	//if err != nil {
-	//	return "", err
-	//}
-	//
-	//for _, addr := range addrs {
-	//	// Check if the address is a valid IP address and not a loopback address
-	//	if ipNet, ok := addr.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
-	//		if ipNet.IP.To4() != nil {
-	//			return ipNet.IP.String(), nil
-	//		}
-	//	}
-	//}
-	//return "", fmt.Errorf("unable to find local IP address")
 	return os.Hostname()
+}
+
+func getHealthCheckPath() (string, error) {
+	env, b := os.LookupEnv("HEALTH_CHECK_PATH")
+	if !b {
+		return "", errors.New("HEALTH_CHECK_PATH not set")
+	}
+	if !strings.HasPrefix(env, "/") {
+		env = "/" + env
+	}
+	return env, nil
 }
