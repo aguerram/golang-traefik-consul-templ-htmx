@@ -1,3 +1,9 @@
+### Required tools
+- [Consul](https://www.consul.io/)
+- [Traefik](https://traefik.io/)
+- [mkcert](https://mkcert.org/)
+- [sqlc](https://docs.sqlc.dev/en/stable/overview/install.html)
+
 # Step 1 start consul
 
 ```

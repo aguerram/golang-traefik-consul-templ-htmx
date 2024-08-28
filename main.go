@@ -11,8 +11,13 @@ import (
 
 func main() {
 	config.InitLogger()
-
 	env := config.InitializeAppEnv()
+
+	_, closeConnection, err := config.NewDatabaseConnection(env)
+	if err != nil {
+		log.Error("Error connecting to database")
+		log.Fatal(err)
+	}
 
 	server, shutdownHttpServer := internal.StartHttpServer(env)
 
@@ -24,9 +29,9 @@ func main() {
 
 	//register with consul
 	deregisterConsul := config.RegisterServiceWithConsul(env)
-	internal.HandleGracefulShutdowns(deregisterConsul, shutdownHttpServer)
+	internal.HandleGracefulShutdowns(deregisterConsul, shutdownHttpServer, closeConnection)
 
 	log.Infof("Server started on port %d", env.Port)
 	//start http server
-	log.Fatal(server.Listen(fmt.Sprintf(":%d", env.Port)))
+	server.Listen(fmt.Sprintf(":%d", env.Port))
 }

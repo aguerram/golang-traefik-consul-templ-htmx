@@ -15,6 +15,7 @@ type AppEnv struct {
 	DiscoveryAppName string
 	InstanceUUID     string
 	AppUrl           string
+	DSN              string
 }
 
 func InitializeAppEnv(filename ...string) *AppEnv {
@@ -33,7 +34,16 @@ func InitializeAppEnv(filename ...string) *AppEnv {
 		DiscoveryAppName: os.Getenv("DISCOVERY_APP_NAME"),
 		InstanceUUID:     uuid.New().String(),
 		AppUrl:           os.Getenv("APP_URL"),
+		DSN:              getRequiredEnv("DSN"),
 	}
+}
+
+func getRequiredEnv(key string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		log.Panicf("Environment variable %s is required", key)
+	}
+	return value
 }
 
 func getAvailablePort() (int, error) {

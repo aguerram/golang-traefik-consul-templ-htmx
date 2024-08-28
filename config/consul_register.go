@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"github.com/hashicorp/consul/api"
@@ -9,7 +10,7 @@ import (
 	"strings"
 )
 
-func RegisterServiceWithConsul(env *AppEnv) func() {
+func RegisterServiceWithConsul(env *AppEnv) func(ctx context.Context) {
 	ipAddress, err := getLocalIP()
 	if err != nil {
 		log.Fatalf("Failed to get local IP address: %v", err)
@@ -60,7 +61,7 @@ func RegisterServiceWithConsul(env *AppEnv) func() {
 
 	log.Infof("Service %s registered in Consul", serviceName)
 
-	return func() {
+	return func(ctx context.Context) {
 		err := client.Agent().ServiceDeregister(serviceID)
 		if err != nil {
 			log.Fatalf("Failed to deregister service from Consul: %v", err)

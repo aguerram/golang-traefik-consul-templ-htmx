@@ -12,3 +12,6 @@ generate-certificate:
 
 templ:
 	templ generate
+
+migrate:
+	sqlc generate -f ./assets/sqlc/sqlc.yaml
