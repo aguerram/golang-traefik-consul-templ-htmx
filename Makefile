@@ -13,5 +13,13 @@ generate-certificate:
 templ:
 	templ generate
 
-migrate:
+db-generate:
 	sqlc generate -f ./assets/sqlc/sqlc.yaml
+
+db-push-tags:
+	# add more tags
+	sqlc push -f assets/sqlc/sqlc.yaml
+
+db-verify:
+	# add more schema to verify
+	sqlc verify -f assets/sqlc/sqlc.yaml

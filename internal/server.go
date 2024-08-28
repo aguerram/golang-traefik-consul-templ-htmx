@@ -33,7 +33,7 @@ func StartHttpServer(env *config.AppEnv) (*fiber.App, func(ctx context.Context))
 
 func HandleGracefulShutdowns(handlers ...GracefulShutdownHandler) {
 	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
 	go func() {
 		<-c
@@ -43,6 +43,9 @@ func HandleGracefulShutdowns(handlers ...GracefulShutdownHandler) {
 		defer cancel()
 
 		for _, handler := range handlers {
+			if handler == nil {
+				continue
+			}
 			handler(timeoutCtx) // You can pass shutdownCtx to handlers that require context for graceful shutdown
 		}
 

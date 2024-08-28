@@ -1,10 +1,12 @@
 version: "2"
+cloud:
+  project: '01J6D59H899FP3JY9H85BG25HS'
 sql:
   - engine: "postgresql"
     queries: "query.sql"
     schema: "schema.sql"
     gen:
       go:
-        package: "tutorial"
-        out: "../../internal/db/tutorial"
+        package: "db"
+        out: "../../internal/db"
         sql_package: "pgx/v5"

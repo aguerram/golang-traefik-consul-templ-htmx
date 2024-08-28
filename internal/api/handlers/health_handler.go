@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"github.com/aguerram/gtcth/config"
-	"github.com/aguerram/gtcth/internal/api/dto/response"
 	"github.com/aguerram/gtcth/internal/api/services"
 	"github.com/gofiber/fiber/v2"
 	log "github.com/sirupsen/logrus"
@@ -21,22 +20,13 @@ func NewHealthHandler(env *config.AppEnv, healthService services.HealthService) 
 }
 
 func (h *HealthHandler) GetHealth(ctx *fiber.Ctx) error {
-	check, err := h.healthService.HealthCheck()
-	var status response.HealthCheckResponse
+	check, err := h.healthService.HealthCheck(ctx.UserContext())
 	if err != nil {
 		log.Errorf("Error checking health: %v", err)
-		status = response.HealthCheckResponse{
-			Status: "DOWN",
-		}
+		return err
 	}
-	if !check {
-		log.Errorf("Health check failed, some components are down")
-		status = response.HealthCheckResponse{
-			Status: "DOWN",
-		}
+	if check.Status == "DOWN" {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(check)
 	}
-	status = response.HealthCheckResponse{
-		Status: "UP",
-	}
-	return ctx.JSON(status)
+	return ctx.JSON(check)
 }
