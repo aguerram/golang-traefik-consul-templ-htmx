@@ -1,3 +1,6 @@
+DSN := $(shell godotenv -f .env -- sh -c 'echo $$DSN')
+
+
 run:
 	air
 
@@ -14,12 +17,13 @@ templ:
 	templ generate
 
 db-generate:
-	sqlc generate -f ./assets/sqlc/sqlc.yaml
+	sqlc generate -f ./internal/db/base/sqlc.yaml
 
-db-push-tags:
-	# add more tags
-	sqlc push -f assets/sqlc/sqlc.yaml
+db-migrate-up:
+	@godotenv -f .env -- migrate -path ./internal/db/base/migrations -database $(DSN) up
 
-db-verify:
-	# add more schema to verify
-	sqlc verify -f assets/sqlc/sqlc.yaml
+db-create-migration:
+	migrate create -ext sql -dir internal/db/base/migrations -seq $(name)
+ifndef name
+	$(error name is not set. Usage: make db-create-migration name=<migration_name>)
+endif

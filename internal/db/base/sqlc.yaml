@@ -3,10 +3,11 @@ cloud:
   project: '01J6D59H899FP3JY9H85BG25HS'
 sql:
   - engine: "postgresql"
-    queries: "query.sql"
-    schema: "schema.sql"
+    queries: "./queries"
+    schema:
+      - "./migrations/*.sql"
     gen:
       go:
         package: "db"
-        out: "../../internal/db"
+        out: ".."
         sql_package: "pgx/v5"

@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func InitializeRoutes(env *config.AppEnv, router fiber.Router, services *services.Service) {
+func InitializeRoutes(env *config.AppEnv, router fiber.Router, services *services.WebService) {
 	//register middlewares
 	router.Use(middleware.NewAppErrorHandler())
 
@@ -16,4 +16,9 @@ func InitializeRoutes(env *config.AppEnv, router fiber.Router, services *service
 	homeHandler := handler.NewHomeHandler(env)
 	router.Get("/", homeHandler.GetHome)
 	router.Get("/p/{profileId}", homeHandler.GetUserProfile)
+
+	//user
+	userHandler := handler.NewUserHandler(services.UserService)
+	usersRoute := router.Group("/users")
+	usersRoute.Get("/", userHandler.ListUsers)
 }

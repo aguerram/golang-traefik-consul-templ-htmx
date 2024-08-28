@@ -4,18 +4,11 @@
 - [mkcert](https://mkcert.org/)
 - [sqlc](https://docs.sqlc.dev/en/stable/overview/install.html)
 
-# Step 1 start consul
+- godotenv `go install github.com/joho/godotenv/cmd/godotenv@latest`
 
+## Step copy .env.example to .env
 ```
-consul agent -dev
-```
-
-> Consul UI available at http://localhost:8500
-
-# Step 2 start traefik
-
-```
-traefik --configFile=assets/traefik/traefik.yml
+cp .env.example .env
 ```
 
 ### To generate ssl certificate use
@@ -23,6 +16,22 @@ traefik --configFile=assets/traefik/traefik.yml
 mkcert -install
 mkcert my-app.local
 ```
+
+##  Step  start consul
+
+```
+consul agent -dev
+```
+
+> Consul UI available at http://localhost:8500
+
+## Step  start traefik
+
+```
+traefik --configFile=assets/traefik/traefik.yml
+```
+
+
 
 ### Project structure
 <pre>

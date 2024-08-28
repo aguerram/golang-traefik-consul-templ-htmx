@@ -2,12 +2,12 @@ package services
 
 import "github.com/jackc/pgx/v5"
 
-type Service struct {
+type ApiService struct {
 	HealthService HealthService
 }
 
-func NewService(conn *pgx.Conn) *Service {
-	return &Service{
+func NewService(conn *pgx.Conn) *ApiService {
+	return &ApiService{
 		HealthService: NewHealthService(conn),
 	}
 }

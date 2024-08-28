@@ -8,9 +8,10 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func InitializeWebApp(env *config.AppEnv, connection *pgx.Conn, group fiber.Router) {
+func InitializeWebApp(env *config.AppEnv, db *pgx.Conn, group fiber.Router) {
+	webServices := services.NewService(db)
 	//initialize services
-	webServices := services.NewService()
+
 	//register routes
 	route.InitializeRoutes(env, group, webServices)
 }

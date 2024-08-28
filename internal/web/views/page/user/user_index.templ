@@ -1,0 +1,18 @@
+package user
+
+import (
+    "github.com/aguerram/gtcth/internal/web/views/layout"
+    "github.com/aguerram/gtcth/internal/db"
+    "strconv"
+)
+
+templ UserIndex(users []db.User){
+    @layout.DefaultLayout("User Index") {
+        <h1>Welcome to the User Index Page.</h1>
+        <ul>
+            for _, user := range users {
+                <li>{strconv.Itoa(int(user.ID))} - {user.Email}</li>
+            }
+        </ul>
+    }
+}

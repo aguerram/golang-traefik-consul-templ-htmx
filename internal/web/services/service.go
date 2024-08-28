@@ -1,8 +1,13 @@
 package services
 
-type Service struct {
+import "github.com/jackc/pgx/v5"
+
+type WebService struct {
+	UserService UserService
 }
 
-func NewService() *Service {
-	return &Service{}
+func NewService(db *pgx.Conn) *WebService {
+	return &WebService{
+		UserService: NewUserService(db),
+	}
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func InitializeRoutes(env *config.AppEnv, router fiber.Router, services *services.Service) {
+func InitializeRoutes(env *config.AppEnv, router fiber.Router, services *services.ApiService) {
 	//routes
 	healthHandler := handlers.NewHealthHandler(env, services.HealthService)
 	router.Get("/health", healthHandler.GetHealth)
